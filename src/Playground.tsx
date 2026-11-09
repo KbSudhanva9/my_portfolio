@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, Bike, Headphones, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bike, Headphones, Moon, Sparkles, Sun } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const steps = [
@@ -38,6 +38,7 @@ const linkedin = 'https://www.linkedin.com/in/bhargava-sudhanva-konakalla'
 
 export default function Playground() {
   const reduceMotion = useReducedMotion()
+  const [isDark, setIsDark] = useState(() => localStorage.getItem('portfolio-theme') === 'dark')
   const [activeStep, setActiveStep] = useState(0)
   const [activeMood, setActiveMood] = useState(0)
   const [activeRabbitHole, setActiveRabbitHole] = useState(0)
@@ -49,6 +50,11 @@ export default function Playground() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = isDark ? 'dark' : 'light'
+    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light')
+  }, [isDark])
 
   const reveal = reduceMotion
     ? {}
@@ -71,7 +77,18 @@ export default function Playground() {
           <a href="#things">Things</a>
           <a href="#hello">Say hello</a>
         </nav>
-        <a className="header-note" href="#hello">Make something <span aria-hidden="true">↗</span></a>
+        <div className="header-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() => setIsDark((current) => !current)}
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+            title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+          >
+            {isDark ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+          <a className="header-note" href="#hello">Make something <span aria-hidden="true">↗</span></a>
+        </div>
       </header>
 
       <main id="home">
